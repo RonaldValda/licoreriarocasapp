@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "1020553657803",
+    "project_id": "bd-inmobiliaria-v01",
+    "storage_bucket": "bd-inmobiliaria-v01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020553657803:android:20bf58804b732772958a4e",
+        "android_client_info": {
+          "package_name": "com.appinmobiliaria.inmobiliariaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020553657803-hmnvvruf3h9fv695s1kg293drk36kuhk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.appinmobiliaria.inmobiliariaapp",
+            "certificate_hash": "194d823b6dc1aca5ad2f837a55952fdc01d267fd"
+          }
+        },
+        {
+          "client_id": "1020553657803-n95171csolqpj62abc4g6fqlo60vbedi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9kaKoPsWtzVW1QHYohBSP7YcwWVGesN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020553657803-n95171csolqpj62abc4g6fqlo60vbedi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020553657803:android:06844d45d1a22a7b958a4e",
+        "android_client_info": {
+          "package_name": "com.nextlevel.licoreriarocasapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020553657803-n95171csolqpj62abc4g6fqlo60vbedi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9kaKoPsWtzVW1QHYohBSP7YcwWVGesN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020553657803-n95171csolqpj62abc4g6fqlo60vbedi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
