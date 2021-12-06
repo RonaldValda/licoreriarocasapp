@@ -24,7 +24,6 @@ class CompraProvider extends ChangeNotifier{
     if(notificar) notifyListeners();
   }
   void setCompraCarrito(Compra compra,{bool notificar=true}){
-    this.compraCarrito=compra;
     if(notificar) notifyListeners();
   }
   void setCompraProductosCarrito(List<CompraProducto> compraProductos,{bool notificar=true}){
