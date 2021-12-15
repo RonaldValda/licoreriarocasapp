@@ -12,7 +12,7 @@ class UseCaseProductoKardex{
   Future<bool> eliminarProductoKardex(ProductoKardex productoKardex){
     return productoKardexRepository.eliminarProductoKardex(productoKardex.id);
   }
-  Future<Map<String,dynamic>> obtenerProductoKardexs(String idProducto){
-    return productoKardexRepository.obtenerProductoKardexs(idProducto);
+  Future<Map<String,dynamic>> obtenerProductoKardexs(String idSucursal,String idProducto,String fechaInicial,String fechaFinal){
+    return productoKardexRepository.obtenerProductoKardexs(idSucursal,idProducto,fechaInicial,fechaFinal);
   }
 }

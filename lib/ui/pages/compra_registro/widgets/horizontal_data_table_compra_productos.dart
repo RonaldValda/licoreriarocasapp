@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:licoreriarocasapp/domain/entities/compra.dart';
-import 'package:licoreriarocasapp/ui/pages/compra/widgets/dialog_compra_producto_carrito.dart';
+import 'package:licoreriarocasapp/domain/entities/usuario.dart';
+import 'package:licoreriarocasapp/ui/pages/compra_registro/widgets/dialog_compra_producto_carrito.dart';
 import 'package:licoreriarocasapp/ui/provider/Compra/compraProvider.dart';
+import 'package:licoreriarocasapp/ui/provider/autenticacion/usuarioProvider.dart';
 import 'package:licoreriarocasapp/ui/widgets/textfields.dart';
 import 'package:provider/provider.dart';
 class HorizontalDataTableCompraProductos extends StatefulWidget {
@@ -21,17 +23,20 @@ class _HorizontalDataTableCompraProductosState extends State<HorizontalDataTable
   @override
   Widget build(BuildContext context) {
     final compraProvider=Provider.of<CompraProvider>(context);
+    final usuarioProvider=Provider.of<UsuarioProvider>(context);
     compraProductos=compraProvider.compraCarrito.compraProductos;
     return Container(
       child: HorizontalDataTable(
         
         leftHandSideColumnWidth:150,
-        rightHandSideColumnWidth: 460,
+        rightHandSideColumnWidth: usuarioProvider.usuario.tipoUsuario=="Vendedor"?300:460,
         isFixedHeader: true,
-        headerWidgets: _getHeaderTable(),
-        leftSideItemBuilder: _generateFirstColumnRow,
+        headerWidgets: _getHeaderTable(usuarioProvider.usuario),
+        leftSideItemBuilder: (context, index) {
+          return _generateFirstColumnRow(context,index,compraProvider);
+        },
         rightSideItemBuilder: (context, index) {
-          return _rowRight(compraProvider,index);
+          return _rowRight(compraProvider,usuarioProvider.usuario,index);
         },
         itemCount: compraProductos.length,
         
@@ -61,7 +66,7 @@ class _HorizontalDataTableCompraProductosState extends State<HorizontalDataTable
      // height: MediaQuery.of(context).size.height/1.5,
     );
   }
-  List<Widget> _getHeaderTable() {
+  List<Widget> _getHeaderTable(Usuario usuario) {
     return [
       
       Row(
@@ -84,8 +89,10 @@ class _HorizontalDataTableCompraProductosState extends State<HorizontalDataTable
       ),
       _getHeaderItem('Lote', 100),
       _getHeaderItem('Fecha vencimiento', 120),
+      if(usuario.tipoUsuario!="Vendedor")
       _getHeaderItem('Precio unitario', 80),
       _getHeaderItem('Cantidad', 80),
+      if(usuario.tipoUsuario!="Vendedor")
       _getHeaderItem('Total', 80),
     ];
   }
@@ -105,49 +112,49 @@ class _HorizontalDataTableCompraProductosState extends State<HorizontalDataTable
       alignment: Alignment.centerLeft,
     );
   }
-  Widget _generateFirstColumnRow(BuildContext context, int index) {
+  Widget _generateFirstColumnRow(BuildContext context, int index,CompraProvider compraProvider) {
     return Row(
       children: [
         SizedBox(width: 5,),
         rowItem(
-          compraProductos[index].producto.contenido, 135, Alignment.centerLeft,index
+          compraProvider,compraProductos[index].producto.contenido, 135, Alignment.centerLeft,index
         ),
       ],
     );
   }
-  Widget _rowRight(CompraProvider compraProvider,index){
+  Widget _rowRight(CompraProvider compraProvider,Usuario usuario,index){
+    return Row(
+      children: <Widget>[
+        rowItem(
+          compraProvider,compraProductos[index].lote, 100, Alignment.center,index
+        ),
+        rowItem(
+          compraProvider,compraProductos[index].fechaVencimiento, 120, Alignment.center,index
+        ),
+        if(usuario.tipoUsuario!="Vendedor")
+        rowItem(
+          compraProvider,compraProductos[index].precioUnitario.toString(), 80, Alignment.center,index
+        ),
+        rowItem(
+          compraProvider,compraProductos[index].cantidad.toString(), 80, Alignment.center,index
+        ),
+        if(usuario.tipoUsuario!="Vendedor")
+        rowItem(
+          compraProvider,(compraProductos[index].cantidad*compraProductos[index].precioUnitario).toString(), 80, Alignment.center,index
+        ),
+      ],
+    );
+  }
+  Widget _generateRightHandSideColumnRow(BuildContext context, int index,CompraProvider compraProvider) {
     TextEditingController controllerPrecioUnitario=TextEditingController(text: compraProductos[index].precioUnitario.toString());
     TextEditingController controllerTotal=TextEditingController(text: (compraProductos[index].cantidad*compraProductos[index].precioUnitario).toString());
     return Row(
       children: <Widget>[
         rowItem(
-          compraProductos[index].lote, 100, Alignment.center,index
+          compraProvider,compraProductos[index].lote, 100, Alignment.center,index
         ),
         rowItem(
-          compraProductos[index].fechaVencimiento, 120, Alignment.center,index
-        ),
-        rowItem(
-          compraProductos[index].precioUnitario.toString(), 80, Alignment.center,index
-        ),
-        rowItem(
-          compraProductos[index].cantidad.toString(), 80, Alignment.center,index
-        ),
-        rowItem(
-          (compraProductos[index].cantidad*compraProductos[index].precioUnitario).toString(), 80, Alignment.center,index
-        ),
-      ],
-    );
-  }
-  Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
-    TextEditingController controllerPrecioUnitario=TextEditingController(text: compraProductos[index].precioUnitario.toString());
-    TextEditingController controllerTotal=TextEditingController(text: (compraProductos[index].cantidad*compraProductos[index].precioUnitario).toString());
-    return Row(
-      children: <Widget>[
-        rowItem(
-          compraProductos[index].lote, 100, Alignment.center,index
-        ),
-        rowItem(
-          compraProductos[index].fechaVencimiento, 120, Alignment.center,index
+          compraProvider,compraProductos[index].fechaVencimiento, 120, Alignment.center,index
         ),
         
         Container(
@@ -163,7 +170,7 @@ class _HorizontalDataTableCompraProductosState extends State<HorizontalDataTable
           ),
         ),
         rowItem(
-          compraProductos[index].cantidad.toString(), 80, Alignment.center,index
+          compraProvider,compraProductos[index].cantidad.toString(), 80, Alignment.center,index
         ),
         Container(
           width: 80,
@@ -179,7 +186,7 @@ class _HorizontalDataTableCompraProductosState extends State<HorizontalDataTable
       ],
     );
   }
-  Widget rowItem(String texto,double width,AlignmentGeometry alignment,int index){
+  Widget rowItem(CompraProvider compraProvider,String texto,double width,AlignmentGeometry alignment,int index){
     return PopupMenuButton(
       elevation: 10,
       offset: const Offset(0, -35),
@@ -222,7 +229,9 @@ class _HorizontalDataTableCompraProductosState extends State<HorizontalDataTable
           PopupMenuItem<int>(
             padding: EdgeInsets.all(0),
             value: 0, 
-            child:PopupMenuItemCompraProducto(compraProducto: compraProductos[index],)
+            child:compraProvider.compraCarrito.fechaConfirmacionMovimiento==""?
+              PopupMenuItemCompraProducto(compraProducto: compraProductos[index],):
+              Container(width: 0,height: 0,)
             // PopupMenuItemProducto(producto: Producto.copyWith(productos[index]),)
           ),
         ];
@@ -252,18 +261,6 @@ class _PopupMenuItemCompraProductoState extends State<PopupMenuItemCompraProduct
               await dialogCompraProductoCarrito(context);
               compraProvider.setCostoTotalCarrito(compraProvider.compraCarrito.compraProductos);
               Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text("Eliminar"),
-            onTap: ()async{
-              /*useCaseProducto.eliminarProducto(widget.producto)
-              .then((completado){
-                productosProvider.productos.removeWhere((element) => element.id==widget.producto.id);
-                productosProvider.notificar();
-              });
-              Navigator.pop(context);*/
             },
           ),
         ],

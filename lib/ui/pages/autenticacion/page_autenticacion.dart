@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:licoreriarocasapp/domain/entities/sucursal.dart';
 import 'package:licoreriarocasapp/domain/usecases/usuario/usecase_usuario.dart';
 import 'package:licoreriarocasapp/ui/pages/principal/page_principal.dart';
 import 'package:licoreriarocasapp/ui/provider/autenticacion/usuarioProvider.dart';
@@ -72,6 +73,7 @@ class _PageAutenticacionState extends State<PageAutenticacion> {
                   .then((resultado) {
                     if(resultado["completado"]){
                       usuarioProvider.setUsuario(resultado["usuario"],notificar: false);
+                      usuarioProvider.sucursal.id="619d3dccd34fe52c308ea749";
                       Navigator.push(
                         context,
                         MaterialPageRoute(

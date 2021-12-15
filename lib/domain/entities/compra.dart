@@ -1,15 +1,19 @@
 import 'package:licoreriarocasapp/domain/entities/producto.dart';
 import 'package:licoreriarocasapp/domain/entities/proveedor.dart';
+import 'package:licoreriarocasapp/domain/entities/sucursal.dart';
 import 'package:licoreriarocasapp/domain/entities/usuario.dart';
 
 class Compra{
   String id;
+  Sucursal sucursal;
   Proveedor proveedor;
   Usuario usuarioPreCompra;
   Usuario usuarioConfirmacion;
   String nroComprobante;
-  String fechaPreCompra;
-  String fechaConfirmacion;
+  String fechaPreCompraMovimiento;
+  String fechaPreCompraSistema;
+  String fechaConfirmacionMovimiento;
+  String fechaConfirmacionSistema;
   double costoTotal;
   bool preCompraTerminada;
   bool confirmado;
@@ -19,12 +23,15 @@ class Compra{
   List<CompraProducto> compraProductos;
   Compra({
     required this.id,
+    required this.sucursal,
     required this.proveedor,
     required this.usuarioPreCompra,
     required this.usuarioConfirmacion,
     required this.nroComprobante,
-    required this.fechaPreCompra,
-    required this.fechaConfirmacion,
+    required this.fechaPreCompraMovimiento,
+    required this.fechaPreCompraSistema,
+    required this.fechaConfirmacionMovimiento,
+    required this.fechaConfirmacionSistema,
     required this.costoTotal,
     required this.preCompraTerminada,
     required this.confirmado,
@@ -42,8 +49,8 @@ class Compra{
   }
   factory Compra.vacio(){
     return Compra(
-      id: "", proveedor: Proveedor.vacio(), usuarioPreCompra: Usuario.vacio(), usuarioConfirmacion: Usuario.vacio(), 
-      nroComprobante: "", fechaPreCompra: "", fechaConfirmacion: "", costoTotal: 0.0, preCompraTerminada: false,confirmado: false, 
+      id: "", sucursal: Sucursal.vacio(),proveedor: Proveedor.vacio(), usuarioPreCompra: Usuario.vacio(), usuarioConfirmacion: Usuario.vacio(), 
+      nroComprobante: "", fechaPreCompraMovimiento: "",fechaPreCompraSistema:"",fechaConfirmacionMovimiento: "", fechaConfirmacionSistema: "",costoTotal: 0.0, preCompraTerminada: false,confirmado: false, 
       observacionesPreCompra: "", observacionesConfirmacion: "",tipoUsuarioConfirmacion: "",compraProductos: []
     );
   }
@@ -57,11 +64,13 @@ class Compra{
     }
     
     return Compra(
-      id: data["id"]??"", proveedor: data["proveedor"]!=null?Proveedor.fromMap(data["proveedor"]):Proveedor.vacio(), 
+      id: data["id"]??"", sucursal: data["sucursal"]!=null?Sucursal.fromMap(data["sucursal"]):Sucursal.vacio(), proveedor: data["proveedor"]!=null?Proveedor.fromMap(data["proveedor"]):Proveedor.vacio(), 
       usuarioPreCompra: data["usuario_pre_compra"]!=null?Usuario.fromMap(data["usuario_pre_compra"]):Usuario.vacio(), 
       usuarioConfirmacion: data["usuario_confirmacion"]!=null?Usuario.fromMap(data["usuario_confirmacion"]):Usuario.vacio(), 
-      nroComprobante: data["nro_comprobante"]??"", fechaPreCompra: data["fecha_pre_compra"]??"", 
-      fechaConfirmacion: data["fecha_confirmacion"]??"", costoTotal: data["costo_total"]!=null?double.parse(data["costo_total"].toString()):0.0, 
+      nroComprobante: data["nro_comprobante"]??"", 
+      fechaPreCompraMovimiento: data["fecha_pre_compra_movimiento"]??"",fechaPreCompraSistema: data["fecha_pre_compra_sistema"]??"", 
+      fechaConfirmacionMovimiento: data["fecha_confirmacion_movimiento"]??"", fechaConfirmacionSistema: data["fecha_confirmacion_sistema"]??"",
+      costoTotal: data["costo_total"]!=null?double.parse(data["costo_total"].toString()):0.0, 
       preCompraTerminada: data["pre_compra_terminada"]??false,confirmado: data["confirmado"]??false, observacionesPreCompra: data["observaciones_pre_compra"]??"", 
       observacionesConfirmacion: data["observaciones_confirmacion"]??"",tipoUsuarioConfirmacion: data["tipo_usuario_confirmacion"]??"",compraProductos: cps
     );
@@ -72,9 +81,10 @@ class Compra{
       cps.add(CompraProducto.copyWith(cp));
     });
     return Compra(
-      id: c.id, proveedor: Proveedor.copyWith(c.proveedor), usuarioPreCompra: Usuario.copyWith(c.usuarioPreCompra), 
+      id: c.id,sucursal: Sucursal.copyWith(c.sucursal), proveedor: Proveedor.copyWith(c.proveedor), usuarioPreCompra: Usuario.copyWith(c.usuarioPreCompra), 
       usuarioConfirmacion: Usuario.copyWith(c.usuarioConfirmacion), nroComprobante: c.nroComprobante, 
-      fechaPreCompra: c.fechaPreCompra, fechaConfirmacion: c.fechaConfirmacion, costoTotal: c.costoTotal, 
+      fechaPreCompraMovimiento: c.fechaPreCompraMovimiento, fechaPreCompraSistema: c.fechaPreCompraSistema,
+      fechaConfirmacionMovimiento: c.fechaConfirmacionMovimiento, fechaConfirmacionSistema: c.fechaConfirmacionSistema,costoTotal: c.costoTotal, 
       preCompraTerminada: c.preCompraTerminada,confirmado: c.confirmado, observacionesPreCompra: c.observacionesPreCompra, 
       observacionesConfirmacion: c.observacionesConfirmacion,tipoUsuarioConfirmacion: c.tipoUsuarioConfirmacion,compraProductos: cps
     );
@@ -82,12 +92,15 @@ class Compra{
   Map<String,dynamic> toMap(){
     return <String,dynamic>{
       "id":this.id,
+      "sucursal":this.sucursal.id,
       "proveedor":this.proveedor.id,
       "usuario_pre_compra":this.usuarioPreCompra.id,
       "usuario_confirmacion":this.usuarioConfirmacion.id,
       "nro_comprobante":this.nroComprobante,
+      "fecha_pre_compra_movimiento":this.fechaPreCompraMovimiento,
+      "fecha_confirmacion_movimiento":this.fechaConfirmacionMovimiento,
       "costo_total":this.costoTotal,
-      "confirmacio":this.confirmado,
+      "confirmado":this.confirmado,
       "observaciones_pre_compra":this.observacionesPreCompra,
       "observaciones_confirmacion":this.observacionesConfirmacion,
       "tipo_usuario_confirmacion":this.tipoUsuarioConfirmacion
@@ -115,7 +128,7 @@ class CompraProducto{
   factory CompraProducto.fromMap(Map<String,dynamic> data){
     return CompraProducto(
       id: data["id"]??"", producto: data["producto"]!=null?Producto.fromMap(data["producto"]):Producto.vacio(), 
-      lote: data["lote"]??"", fechaVencimiento: data["fecha_vencimiento"], cantidad: data["cantidad"]??0, 
+      lote: data["lote"]??"", fechaVencimiento: data["fecha_vencimiento"]??"", cantidad: data["cantidad"]??0, 
       precioUnitario: data["precio_unitario"]!=null?double.parse(data["precio_unitario"].toString()):0.0
     );
   }

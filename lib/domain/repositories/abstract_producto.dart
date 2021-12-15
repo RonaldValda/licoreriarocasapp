@@ -13,7 +13,7 @@ abstract class AbstractProductoKardexRepository{
   Future<Map<String,dynamic>> registrarProductoKardex(String idUsuario,String idSucursal,String idProductoKardex,ProductoKardex productoKardex);
   Future<bool> modificarProductoKardex(ProductoKardex productoKardex);
   Future<bool> eliminarProductoKardex(String id);
-  Future<Map<String,dynamic>> obtenerProductoKardexs(String idProducto);
+  Future<Map<String,dynamic>> obtenerProductoKardexs(String idSucursal,String idProducto,String fechaInicial,String fechaFinal);
   
 }
 /*

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:licoreriarocasapp/domain/entities/producto.dart';
 import 'package:licoreriarocasapp/domain/usecases/producto/usecase_producto.dart';
 import 'package:licoreriarocasapp/ui/pages/producto/page_producto_registro.dart';
+import 'package:licoreriarocasapp/ui/pages/producto/widgets/dialog_producto_oferta_dia.dart';
 import 'package:licoreriarocasapp/ui/provider/generales/categoriasProvider.dart';
 import 'package:licoreriarocasapp/ui/provider/productos/productosProvider.dart';
 import 'package:provider/provider.dart';
@@ -94,6 +95,36 @@ class _PopupMenuItemEtiquetasState extends State<PopupMenuItemEtiquetas> {
     );
   }
 }
+class PopupMenuItemProductos extends StatefulWidget {
+  PopupMenuItemProductos({Key? key}) : super(key: key);
+
+  @override
+  _PopupMenuItemProductosState createState() => _PopupMenuItemProductosState();
+}
+
+class _PopupMenuItemProductosState extends State<PopupMenuItemProductos> {
+  @override
+  Widget build(BuildContext context) {
+    final productosProvider=Provider.of<ProductosProvider>(context);
+    return Container(
+      child: Column(
+        children: productosProvider.productos.map((producto){
+          return Column(
+            children: [
+              ListTile(
+                title: Text("${producto.contenido}"),
+                onTap: (){
+                  productosProvider.setProducto(producto);
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
 class PopupMenuItemProducto extends StatefulWidget {
   PopupMenuItemProducto({Key? key,required this.producto}) : super(key: key);
   final Producto producto;
@@ -109,6 +140,13 @@ class _PopupMenuItemProductoState extends State<PopupMenuItemProducto> {
     return Container(
       child: Column(
         children: [
+          ListTile(
+            leading: Icon(Icons.offline_pin_outlined),
+            title: Text("Oferta del día"),
+            onTap: ()async{
+              await dialogProductoOfertaDia(context,widget.producto);
+            }
+          ),
           ListTile(
             leading: Icon(Icons.edit),
             title: Text("Modificar"),

@@ -43,7 +43,6 @@ Future dialogBuscarProducto(
       );
     }
   ); 
-  
 }
 class ContainerRegistroCompraProductos extends StatefulWidget {
   ContainerRegistroCompraProductos({Key? key}) : super(key: key);
@@ -60,10 +59,13 @@ class _ContainerRegistroCompraProductosState extends State<ContainerRegistroComp
   UseCaseCompraProducto useCaseCompraProducto=UseCaseCompraProducto();
   Producto producto=Producto.vacio();
   List<CompraProducto> compraProductosb=[];
-  DateTime? pickedDate;
+  DateTime? pickedDate;  
+  TimeOfDay? time;
+  
   @override
   void initState() {
     pickedDate=DateTime.now();
+    time=TimeOfDay(hour: DateTime.now().hour,minute: DateTime.now().minute);
     controller=TextEditingController(text: "");
     super.initState();
   }

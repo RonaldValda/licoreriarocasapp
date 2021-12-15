@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:licoreriarocasapp/domain/entities/compra.dart';
-import 'package:licoreriarocasapp/ui/pages/compra/page_compra_registro.dart';
+import 'package:licoreriarocasapp/ui/pages/compra_registro/page_compra_registro.dart';
 import 'package:licoreriarocasapp/ui/provider/Compra/compraProvider.dart';
 import 'package:provider/provider.dart';
 class PageCompras extends StatefulWidget {
@@ -34,9 +34,9 @@ class _PageComprasState extends State<PageCompras> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
+        onPressed: ()async{
           compraProvider.setCompra(Compra.vacio(),notificar: false);
-          Navigator.push(
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context){

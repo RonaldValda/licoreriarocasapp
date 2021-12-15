@@ -4,30 +4,35 @@ import 'package:flutter/material.dart';
 import 'package:licoreriarocasapp/domain/entities/compra.dart';
 import 'package:licoreriarocasapp/domain/entities/producto.dart';
 import 'package:licoreriarocasapp/domain/usecases/producto/usecase_producto.dart';
-import 'package:licoreriarocasapp/ui/pages/compra/page_compra_registro.dart';
+import 'package:licoreriarocasapp/ui/pages/compra_registro/page_compra_registro.dart';
 import 'package:licoreriarocasapp/ui/provider/Compra/compraProvider.dart';
+import 'package:licoreriarocasapp/ui/provider/autenticacion/usuarioProvider.dart';
 import 'package:licoreriarocasapp/ui/provider/productos/productosProvider.dart';
 import 'package:licoreriarocasapp/ui/widgets/textfields.dart';
 import 'package:provider/provider.dart';
-class ContainerListadoProductos extends StatefulWidget {
-  ContainerListadoProductos({Key? key}) : super(key: key);
+class ContainerListadoProductosCompra extends StatefulWidget {
+  ContainerListadoProductosCompra({Key? key}) : super(key: key);
 
   @override
-  _ContainerListadoProductosState createState() => _ContainerListadoProductosState();
+  _ContainerListadoProductosCompraState createState() => _ContainerListadoProductosCompraState();
 }
 
-class _ContainerListadoProductosState extends State<ContainerListadoProductos> {
+class _ContainerListadoProductosCompraState extends State<ContainerListadoProductosCompra> {
   UseCaseProducto useCaseProducto=UseCaseProducto();
   List<Producto> productos=[];
   List<CompraProducto> compraProductos=[];
-  late CompraProvider cmpProvider;
+  //late CompraProvider cmpProvider;
+  //late UsuarioProvider usProvider;
   double widthInfoCompra=0.0;
   double heightInfoCompra=0.0;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    /*WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       cmpProvider=Provider.of<CompraProvider>(context,listen: false);
+      usProvider=Provider.of<UsuarioProvider>(context,listen: false);
+      cmpProvider.compraCarrito.usuarioPreCompra=usProvider.usuario;
+      cmpProvider.setCompra(Compra.vacio());
       useCaseProducto.obtenerProductosGeneral()
       .then((resultado){
         if(resultado["completado"]){
@@ -43,16 +48,18 @@ class _ContainerListadoProductosState extends State<ContainerListadoProductos> {
           });
         }
       });
-    });
+    });*/
     
   }
   @override
   Widget build(BuildContext context) {
     final compraProvider=Provider.of<CompraProvider>(context);
     final productoProvider=Provider.of<ProductosProvider>(context);
-    widthInfoCompra=MediaQuery.of(context).size.width-10;
+    final usuarioProvider=Provider.of<UsuarioProvider>(context);
+    widthInfoCompra=MediaQuery.of(context).size.width-20;
     heightInfoCompra=40;
     return Container(
+      padding: EdgeInsets.all(5),
       child: Stack(
         children: [
           //Expanded(
@@ -70,13 +77,13 @@ class _ContainerListadoProductosState extends State<ContainerListadoProductos> {
               },
             ),
             if(compraProvider.compraCarrito.compraProductos.length>0)
-            _containerInfoPreCompra(compraProvider)
+            _containerInfoPreCompra(compraProvider,usuarioProvider)
           //)
         ],
       ),
     );
   }
-  Widget _containerInfoPreCompra(CompraProvider compraProvider){
+  Widget _containerInfoPreCompra(CompraProvider compraProvider,UsuarioProvider usuarioProvider){
     return Positioned(
       bottom: 0,
       right: 0,
@@ -109,6 +116,7 @@ class _ContainerListadoProductosState extends State<ContainerListadoProductos> {
                 height: heightInfoCompra,
                 child: MaterialButton(
                   onPressed: (){
+                    compraProvider.compraCarrito.usuarioPreCompra=usuarioProvider.usuario;
                     Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -232,6 +240,7 @@ class _ContainerListadoProductosState extends State<ContainerListadoProductos> {
               ),
               child: MaterialButton(
                 onPressed: (){
+                  print(compraProducto.producto.precio);
                   if(compraProducto.seleccionado){
                     compraProducto.seleccionado=!compraProducto.seleccionado;
                     compraProvider.removeCompraProductoCarrito(compraProducto);
