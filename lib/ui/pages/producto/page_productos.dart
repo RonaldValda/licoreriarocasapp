@@ -88,6 +88,7 @@ class _PageProductosState extends State<PageProductos> {
                       productos=resultado["productos"];
                       productosProvider.productos=[];
                       productosProvider.productos.addAll(resultado["productos"]);
+                      print(productosProvider.productos.length);
                       productosProvider.notificar();
                       setState(() {
                         

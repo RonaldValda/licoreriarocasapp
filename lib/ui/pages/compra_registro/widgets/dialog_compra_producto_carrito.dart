@@ -4,6 +4,7 @@ import 'package:licoreriarocasapp/domain/entities/producto.dart';
 import 'package:licoreriarocasapp/domain/usecases/compra/usecase_compra_producto.dart';
 import 'package:licoreriarocasapp/domain/usecases/producto/usecase_producto.dart';
 import 'package:licoreriarocasapp/ui/provider/Compra/compraProvider.dart';
+import 'package:licoreriarocasapp/ui/provider/autenticacion/usuarioProvider.dart';
 import 'package:licoreriarocasapp/ui/widgets/textfields.dart';
 import 'package:provider/provider.dart';
 
@@ -86,9 +87,12 @@ class _ContainerProductoCompraCarritoState extends State<ContainerProductoCompra
   @override
   Widget build(BuildContext context) {
     final compraProvider=Provider.of<CompraProvider>(context);
+    final usuarioProvider=Provider.of<UsuarioProvider>(context);
+    //print("usuario Precompra ${compraProvider.compraCarrito.usuarioPreCompra.id}");
+    //print("usuario Provider ${usuarioProvider.usuario.id}");
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 350,
+      height: usuarioProvider.usuario.tipoUsuario=="Vendedor"?250:350,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -101,7 +105,7 @@ class _ContainerProductoCompraCarritoState extends State<ContainerProductoCompra
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFFBasico(
-                  controller: controllerLote!, 
+                  controller: controllerLote!,
                   labelText: "Lote", 
                   onChanged: (x){
                     compraProvider.compraProducto.lote=x;
@@ -120,8 +124,10 @@ class _ContainerProductoCompraCarritoState extends State<ContainerProductoCompra
                   }
                 ),
                 SizedBox(height: 5,),
+                if(usuarioProvider.usuario.tipoUsuario!="Vendedor")
                 TextFFBasico(
                   controller: controllerPU!, 
+                  //isEnabled: compraProvider.compraCarrito.usuarioPreCompra.id==usuarioProvider.usuario.id,
                   labelText: "P. Unitario", 
                   onChanged: (x){
                     compraProvider.compraProducto.precioUnitario=double.parse(x);
@@ -130,6 +136,7 @@ class _ContainerProductoCompraCarritoState extends State<ContainerProductoCompra
                 ),
                 SizedBox(height: 5,),
                 TextFFBasico(
+                  //isEnabled: compraProvider.compraCarrito.usuarioPreCompra.id==usuarioProvider.usuario.id,
                   controller: controllerCantidad!, 
                   labelText: "Cantidad", 
                   onChanged: (x){
@@ -138,7 +145,9 @@ class _ContainerProductoCompraCarritoState extends State<ContainerProductoCompra
                   }
                 ),
                 SizedBox(height: 5,),
+                if(usuarioProvider.usuario.tipoUsuario!="Vendedor")
                 TextFFBasico(
+                  isEnabled: false,
                   controller: controllerTotal!, 
                   labelText: "Costo total", 
                   onChanged: (x){

@@ -63,9 +63,10 @@ class _TextFFBasicoState extends State<TextFFBasico> {
 }
 
 class TextFFOnTap extends StatefulWidget {
-  TextFFOnTap({Key? key,required this.controller,required this.label,required this.onTap}) : super(key: key);
+  TextFFOnTap({Key? key,required this.controller,required this.label,required this.onTap,this.isEnabled=true}) : super(key: key);
   final TextEditingController controller;
   final String label;
+  final bool isEnabled;
   final VoidCallback onTap;
   @override
   _TextFFOnTapState createState() => _TextFFOnTapState();
@@ -76,6 +77,7 @@ class _TextFFOnTapState extends State<TextFFOnTap> {
   Widget build(BuildContext context) {
     return TextFormField(
         controller: widget.controller,
+        enabled: widget.isEnabled,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
           hintStyle: TextStyle(color: Colors.black.withOpacity(0.8),fontSize: 15),
@@ -83,7 +85,7 @@ class _TextFFOnTapState extends State<TextFFOnTap> {
           fillColor: Colors.transparent,
           labelText: widget.label,
           labelStyle: TextStyle(
-            fontSize: 14
+            fontSize: 18
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5),
@@ -93,7 +95,10 @@ class _TextFFOnTapState extends State<TextFFOnTap> {
             borderRadius: BorderRadius.circular(5),
             borderSide: BorderSide(color: Colors.blue.withOpacity(0.7))
           ),
-          
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: BorderSide(color: Colors.black.withOpacity(0.5))
+          ),
         ),
         onTap:widget.onTap
       );

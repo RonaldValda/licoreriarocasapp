@@ -1,17 +1,15 @@
 
 import 'package:flutter/material.dart';
-import 'package:licoreriarocasapp/domain/entities/producto.dart';
 import 'package:licoreriarocasapp/domain/entities/proveedor.dart';
-import 'package:licoreriarocasapp/domain/entities/usuario.dart';
 import 'package:licoreriarocasapp/domain/usecases/compra/usecase_compra.dart';
 import 'package:licoreriarocasapp/domain/usecases/compra/usecase_proveedor.dart';
-import 'package:licoreriarocasapp/ui/pages/compra/widgets/button_flotante_compra_registro.dart';
-import 'package:licoreriarocasapp/ui/pages/compra/widgets/dialog_buscar_producto.dart';
-import 'package:licoreriarocasapp/ui/pages/compra/widgets/dialog_proveedor.dart';
-import 'package:licoreriarocasapp/ui/pages/compra/widgets/horizontal_data_table_compra_productos.dart';
+import 'package:licoreriarocasapp/ui/pages/compra_registro/widgets/button_flotante_compra_registro.dart';
+import 'package:licoreriarocasapp/ui/pages/compra_registro/widgets/dialog_proveedor.dart';
+import 'package:licoreriarocasapp/ui/pages/compra_registro/widgets/horizontal_data_table_compra_productos.dart';
+import 'package:licoreriarocasapp/ui/pages/proveedores/widgets/dialog_registro_proveedor.dart';
 import 'package:licoreriarocasapp/ui/provider/Compra/compraProvider.dart';
 import 'package:licoreriarocasapp/ui/provider/autenticacion/usuarioProvider.dart';
-import 'package:licoreriarocasapp/ui/widgets/button_registro.dart';
+import 'package:licoreriarocasapp/ui/utils/generales_utils.dart';
 import 'package:licoreriarocasapp/ui/widgets/textfields.dart';
 import 'package:provider/provider.dart';
 class PageCompraRegistro extends StatefulWidget {
@@ -25,16 +23,23 @@ class _PageCompraRegistroState extends State<PageCompraRegistro> {
   TextEditingController? controllerComprobante;
   TextEditingController? controllerProveedor;
   TextEditingController? controllerObservacionesPreCompra;
+  TextEditingController? controllerFechaMovimiento;
   Proveedor proveedor=Proveedor.vacio();
   UseCaseProveedor useCaseProveedor=UseCaseProveedor();
   UseCaseCompra useCaseCompra=UseCaseCompra();
   bool preCompraIniciada=false;
+  bool registroAtrazado=false;
+  DateTime? pickedDate;  
+  TimeOfDay? time;
   @override
   void initState() {
     super.initState();
+    pickedDate=DateTime.now();
+    time=TimeOfDay(hour: DateTime.now().hour,minute: DateTime.now().minute);
     controllerComprobante=TextEditingController(text: "");
     controllerProveedor=TextEditingController(text: "");
     controllerObservacionesPreCompra=TextEditingController(text: "");
+    controllerFechaMovimiento=TextEditingController(text: "");
   }
   @override
   Widget build(BuildContext context) {
@@ -53,12 +58,56 @@ class _PageCompraRegistroState extends State<PageCompraRegistro> {
                   child: ListView(
                     padding: EdgeInsets.only(left: 5,right:5,top: 10,bottom: 5),
                     children: [
-                      TextFFBasico(
-                        controller: controllerComprobante!, 
-                        labelText: "N° de comprobante / factura", 
-                        onChanged: (x){
-                          compraProvider.compra.nroComprobante=x;
-                        }
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CheckboxListTile(
+                              title: Text("Registro atrazado"),
+                              value: registroAtrazado, 
+                              onChanged: (value){
+                                setState(() {
+                                  registroAtrazado=value!;
+                                });
+                              }
+                            ),
+                          ),
+                          if(registroAtrazado)
+                          Expanded(
+                            child: TextFFOnTap(
+                              controller: controllerFechaMovimiento!, 
+                              label: "Fecha movimiento", 
+                              onTap: ()async{
+                                DateTime firstDate= DateTime(DateTime.now().year-5);
+                                DateTime lastDate= DateTime(DateTime.now().year+5);
+                                await pickDate(context,pickedDate!,firstDate,lastDate);
+                                /*setState(() {
+                                  pickedDate=date;
+                                  //cp.fechaVencimiento="${pickedDate!.day.toString().padLeft(2,'0')}-${pickedDate!.month.toString().padLeft(2,'0')}-${pickedDate!.year.toString()}";
+                                  controllerFechaMovimiento!.text="${pickedDate!.day.toString().padLeft(2,'0')}-${pickedDate!.month.toString().padLeft(2,'0')}-${pickedDate!.year.toString()}";
+                                });*/
+                                TimeOfDay timeOfDay=await pickTime(context, time);
+                                setState(() {
+                                  time=timeOfDay;
+                                  controllerFechaMovimiento!.text="${pickedDate!.day.toString().padLeft(2,'0')}-${pickedDate!.month.toString().padLeft(2,'0')}-${pickedDate!.year.toString()} ${time!.hour.toString().padLeft(2,'0')}:${time!.minute.toString().padLeft(2,'0')}";
+                                });
+                              } 
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFFBasico(
+                              controller: controllerComprobante!, 
+                              labelText: "N° comp. / fact.", 
+                              onChanged: (x){
+                                compraProvider.compraCarrito.nroComprobante=x;
+                              }
+                            ),
+                          ),
+                          
+                        ],
                       ),
                       SizedBox(height: 5,),
                       if(proveedor.id!="")
@@ -93,6 +142,7 @@ class _PageCompraRegistroState extends State<PageCompraRegistro> {
                                         try{
                                           proveedor=Proveedor.vacio();
                                           await dialogBuscarProveedor(context, proveedor);
+                                          compraProvider.compraCarrito.proveedor=proveedor;
                                           setState(() {
                                             preCompraIniciada=false;
                                           });
@@ -146,7 +196,7 @@ class _PageCompraRegistroState extends State<PageCompraRegistro> {
                         controller: controllerObservacionesPreCompra!, 
                         labelText: "Observaciones pre compra", 
                         onChanged: (x){
-                          compraProvider.compra.observacionesPreCompra=x;
+                          compraProvider.compraCarrito.observacionesPreCompra=x;
                           if(preCompraIniciada){
                             preCompraIniciada=!preCompraIniciada;
                             setState(() {

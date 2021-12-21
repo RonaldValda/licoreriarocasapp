@@ -4,7 +4,9 @@ import 'package:licoreriarocasapp/ui/pages/autenticacion/page_autenticacion.dart
 import 'package:licoreriarocasapp/ui/provider/Compra/compraProvider.dart';
 import 'package:licoreriarocasapp/ui/provider/autenticacion/usuarioProvider.dart';
 import 'package:licoreriarocasapp/ui/provider/generales/categoriasProvider.dart';
+import 'package:licoreriarocasapp/ui/provider/productoKardex/productoKardexProvider.dart';
 import 'package:licoreriarocasapp/ui/provider/productos/productosProvider.dart';
+import 'package:licoreriarocasapp/ui/provider/venta/ventaProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -26,7 +28,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_)=>CategoriasProvider()),
         ChangeNotifierProvider(create: (_)=>ProductosProvider()),
         ChangeNotifierProvider(create: (_)=>UsuarioProvider()),
-        ChangeNotifierProvider(create: (_)=>CompraProvider())
+        ChangeNotifierProvider(create: (_)=>CompraProvider()),
+        ChangeNotifierProvider(create: (_)=>ProductoKardexProvider()),
+        ChangeNotifierProvider(create: (_)=>VentaProvider())
       ],
       child: MaterialApp(
           title: 'Flutter Demo',

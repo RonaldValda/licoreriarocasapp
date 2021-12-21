@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:licoreriarocasapp/domain/entities/proveedor.dart';
 import 'package:licoreriarocasapp/domain/usecases/compra/usecase_proveedor.dart';
-import 'package:licoreriarocasapp/ui/pages/compra/widgets/dialog_proveedor.dart';
+import 'package:licoreriarocasapp/ui/pages/proveedores/widgets/dialog_registro_proveedor.dart';
 class PageProveedores extends StatefulWidget {
   PageProveedores({Key? key}) : super(key: key);
 

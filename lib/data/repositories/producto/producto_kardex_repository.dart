@@ -54,7 +54,7 @@ class ProductoKardexRepository extends AbstractProductoKardexRepository{
   }
 
   @override
-  Future<Map<String, dynamic>> obtenerProductoKardexs(String idProducto) async{
+  Future<Map<String, dynamic>> obtenerProductoKardexs(String idSucursal,String idProducto,String fechaInicial,String fechaFinal) async{
     Map<String,dynamic> map={};
     List<ProductoKardex> productoKardexs=[];
     List productoKardexsD=[];
@@ -66,7 +66,10 @@ class ProductoKardexRepository extends AbstractProductoKardexRepository{
       graphql.QueryOptions(
         document:  graphql.gql(getQueryObtenerProductoKardexs()),
         variables: ({
-          "id_producto":idProducto
+          "id_sucursal":idSucursal,
+          "id_producto":idProducto,
+          "fecha_inicial":fechaInicial,
+          "fecha_final":fechaFinal
         }),
         fetchPolicy: graphql.FetchPolicy.cacheAndNetwork,
       ),

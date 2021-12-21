@@ -24,6 +24,7 @@ class CompraProvider extends ChangeNotifier{
     if(notificar) notifyListeners();
   }
   void setCompraCarrito(Compra compra,{bool notificar=true}){
+    this.compraCarrito=compra;
     if(notificar) notifyListeners();
   }
   void setCompraProductosCarrito(List<CompraProducto> compraProductos,{bool notificar=true}){
@@ -32,6 +33,7 @@ class CompraProvider extends ChangeNotifier{
   }
   void addCompraProductoCarrito(CompraProducto compraProducto,{bool notificar=true}){
     this.compraCarrito.compraProductos.add(compraProducto);
+    this.compraCarrito.compraProductos.sort((a,b)=>a.producto.contenido.compareTo(b.producto.contenido));
     compraCarrito.costoTotal+=compraProducto.cantidad*compraProducto.precioUnitario;
     if(notificar) notifyListeners();
   }

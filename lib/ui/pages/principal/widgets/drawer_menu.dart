@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:licoreriarocasapp/ui/pages/compra/page_compras.dart';
-import 'package:licoreriarocasapp/ui/pages/compra/page_proveedores.dart';
+import 'package:licoreriarocasapp/ui/pages/cliente/page_clientes.dart';
+import 'package:licoreriarocasapp/ui/pages/compras/page_compras.dart';
+import 'package:licoreriarocasapp/ui/pages/compras_pendientes/page_compras_pendientes.dart';
 import 'package:licoreriarocasapp/ui/pages/generales/page_generales.dart';
 import 'package:licoreriarocasapp/ui/pages/producto/page_productos.dart';
+import 'package:licoreriarocasapp/ui/pages/producto_kardex/page_producto_kardex.dart';
+import 'package:licoreriarocasapp/ui/pages/proveedores/page_proveedores.dart';
 import 'package:licoreriarocasapp/ui/pages/usuario/page_usuarios.dart';
 class DrawerMenu extends StatefulWidget {
   DrawerMenu({Key? key}) : super(key: key);
@@ -56,6 +59,19 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     },
                   ),
                   ListTile(
+                    title: Text("Kardex de productos"),
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context){
+                            return PageProductoKardex();
+                          }
+                        )
+                      );
+                    },
+                  ),
+                  ListTile(
                     title: Text("Proveedores"),
                     onTap: (){
                       Navigator.push(
@@ -82,6 +98,19 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     },
                   ),
                   ListTile(
+                    title: Text("Compras pendientes"),
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context){
+                            return PageComprasPendientes();
+                          }
+                        )
+                      );
+                    },
+                  ),
+                  ListTile(
                     title: Text("Usuario"),
                     onTap: (){
                       Navigator.push(
@@ -89,6 +118,19 @@ class _DrawerMenuState extends State<DrawerMenu> {
                         MaterialPageRoute(
                           builder: (context){
                             return PageUsuarios();
+                          }
+                        )
+                      );
+                    },
+                  ),
+                  ListTile(
+                    title: Text("Clientes"),
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context){
+                            return PageClientes();
                           }
                         )
                       );

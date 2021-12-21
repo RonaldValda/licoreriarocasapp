@@ -10,10 +10,11 @@ abstract class AbstractProveedorRepository{
 }
 
 abstract class AbstractCompraReposity{
-  Future<Map<String,dynamic>> registrarPreCompra(Compra compra,List<CompraProducto> compraProductos);
+  Future<Map<String,dynamic>> registrarPreCompra(Compra compra);
   Future<bool> modificarPreCompra(Compra compra);
   Future<bool> terminarPreCompra(Compra compra);
-  
+  Future<Map<String,dynamic>> obtenerPreComprasPendientes(String idSucursal,String tipoUsuarioConfirmacion);
+  Future<Map<String,dynamic>> responderConfirmacionPreCompra(Compra compra);
 }
 
 abstract class AbstractCompraProductoRepository{

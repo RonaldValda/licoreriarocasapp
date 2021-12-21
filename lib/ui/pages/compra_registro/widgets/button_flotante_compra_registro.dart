@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:licoreriarocasapp/domain/entities/compra.dart';
 import 'package:licoreriarocasapp/domain/entities/producto.dart';
-import 'package:licoreriarocasapp/ui/pages/compra/widgets/dialog_buscar_producto.dart';
+import 'package:licoreriarocasapp/domain/entities/usuario.dart';
+import 'package:licoreriarocasapp/domain/usecases/compra/usecase_compra.dart';
 import 'package:licoreriarocasapp/ui/provider/Compra/compraProvider.dart';
+import 'package:licoreriarocasapp/ui/provider/autenticacion/usuarioProvider.dart';
 import 'package:provider/provider.dart';
 class ButtonFlotanteCompraRegitro extends StatefulWidget {
   ButtonFlotanteCompraRegitro({Key? key}) : super(key: key);
@@ -13,9 +16,11 @@ class ButtonFlotanteCompraRegitro extends StatefulWidget {
 class _ButtonFlotanteCompraRegitroState extends State<ButtonFlotanteCompraRegitro> {
   double width=0.0;
   double height=0.0;
+  UseCaseCompra useCaseCompra=UseCaseCompra();
   @override
   Widget build(BuildContext context) {
     final compraProvider=Provider.of<CompraProvider>(context);
+    final usuarioProvider=Provider.of<UsuarioProvider>(context);
     width=MediaQuery.of(context).size.width-10;
     height=50;
     return Positioned(
@@ -77,7 +82,24 @@ class _ButtonFlotanteCompraRegitroState extends State<ButtonFlotanteCompraRegitr
                     ),
                   ),
                   onPressed: (){
-            
+                    compraProvider.compraCarrito.sucursal=usuarioProvider.sucursal;
+                    compraProvider.compraCarrito.usuarioPreCompra=usuarioProvider.usuario;
+                    compraProvider.compraCarrito.tipoUsuarioConfirmacion=usuarioProvider.usuario.tipoUsuario=="Administrador"?"Vendedor":"Administrador";
+                    useCaseCompra.registrarPreCompra(compraProvider.compraCarrito)
+                    .then((resultado){
+                      if(resultado["completado"]){
+                        compraProvider.compraCarrito=resultado["compra"];
+                        compraProvider.compraCarrito.compraProductos.forEach((element) { 
+                          element.seleccionado=false;
+                          element.cantidad=0;
+                          element.precioUnitario=0;
+                          element.lote="";
+                          element.fechaVencimiento="";
+                        });
+                        compraProvider.setCompraCarrito(Compra.vacio());
+                        Navigator.pop(context);
+                      }
+                    });
                   }
                 )
               ),
