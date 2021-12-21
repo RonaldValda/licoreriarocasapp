@@ -4,6 +4,7 @@ import 'package:licoreriarocasapp/domain/entities/cliente.dart';
 import 'package:licoreriarocasapp/domain/usecases/venta/usecase_cliente.dart';
 import 'package:licoreriarocasapp/ui/pages/cliente/widgets/dialog_registro_cliente.dart';
 import 'package:licoreriarocasapp/ui/pages/generales/widgets/dialog_registro_categoria.dart';
+import 'package:licoreriarocasapp/ui/pages/venta_registro/widgets/button_flotante_venta_registro.dart';
 import 'package:licoreriarocasapp/ui/pages/venta_registro/widgets/dialog_buscar_cliente.dart';
 import 'package:licoreriarocasapp/ui/pages/venta_registro/widgets/horizontal_data_table_venta_productos.dart';
 import 'package:licoreriarocasapp/ui/provider/venta/ventaProvider.dart';
@@ -154,7 +155,8 @@ class _PageVentaRegistroState extends State<PageVentaRegistro> {
                 )
               ],
             ),
-          )
+          ),
+          ButtonFlotanteVentaRegitro()
         ],
       )
     );

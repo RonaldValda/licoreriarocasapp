@@ -121,14 +121,12 @@ class _HorizontalDataTableVentaProductosState extends State<HorizontalDataTableV
   Widget _rowRight(VentaProvider ventaProvider,Usuario usuario,index){
     return Row(
       children: <Widget>[
-        if(usuario.tipoUsuario!="Vendedor")
         rowItem(
           ventaProvider,ventaProvider.ventaCarrito.ventaProductos[index].precioUnitario.toString(), 80, Alignment.center,index
         ),
         rowItem(
           ventaProvider,ventaProvider.ventaCarrito.ventaProductos[index].cantidad.toString(), 80, Alignment.center,index
         ),
-        if(usuario.tipoUsuario!="Vendedor")
         rowItem(
           ventaProvider,(ventaProvider.ventaCarrito.ventaProductos[index].cantidad*ventaProvider.ventaCarrito.ventaProductos[index].precioUnitario).toString(), 80, Alignment.center,index
         ),

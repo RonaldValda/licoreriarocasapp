@@ -92,6 +92,8 @@ String getQueryObtenerProductos(){
       stock_minimo
       imagenes_producto
       utilidad
+      cantidad_favoritos
+      fecha_registro
     }
   }
   """;

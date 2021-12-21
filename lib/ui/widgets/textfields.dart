@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TextFFBasico extends StatefulWidget {
   TextFFBasico({Key? key,required this.controller,required this.labelText,
-    required this.onChanged, this.isPassword=false,this.isEnabled=true,this.textAlign=TextAlign.left
+    required this.onChanged, this.isPassword=false,this.isEnabled=true,
+    this.textAlign=TextAlign.left,this.fontSize=15,this.fontSizeDecoration=18,
   }) : super(key: key);
   final TextEditingController controller;
   final String labelText;
@@ -10,6 +12,8 @@ class TextFFBasico extends StatefulWidget {
   final bool isPassword;
   final bool isEnabled;
   final TextAlign textAlign;
+  final double fontSize;
+  final double fontSizeDecoration;
   @override
   _TextFFBasicoState createState() => _TextFFBasicoState();
 }
@@ -24,15 +28,17 @@ class _TextFFBasicoState extends State<TextFFBasico> {
       textAlign: widget.textAlign,
       controller: widget.controller,
       style: TextStyle(color: color.withOpacity(0.8),
-        fontSize: 15
+        fontSize: widget.fontSize
       ),
+      autofocus: true,
+      scrollPadding: EdgeInsets.zero,
       obscureText: widget.isPassword,
       enabled: widget.isEnabled,
-      enableSuggestions: false,
+      //enableSuggestions: false,
       maxLines: 1,
       
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+        contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 0),
         //counterText: controllerCII!.text.length.toString(),
         //hintText: "Capacidad de inversión inicial",
         hintStyle: TextStyle(color: color.withOpacity(0.8),fontSize: 15),
@@ -40,7 +46,75 @@ class _TextFFBasicoState extends State<TextFFBasico> {
         fillColor: colorFill,
         labelText: widget.labelText,
         labelStyle: TextStyle(
-          fontSize: 18
+          fontSize: widget.fontSizeDecoration
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(color: color.withOpacity(0.5))
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(color: color.withOpacity(0.7))
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(color: color.withOpacity(0.5))
+        ),
+      ),
+      onChanged:(x){ 
+        widget.onChanged(x);
+      },
+    );
+  }
+}
+class TextFFBasicoNumeros extends StatefulWidget {
+  TextFFBasicoNumeros({Key? key,required this.controller,required this.labelText,
+    required this.onChanged, this.isPassword=false,this.isEnabled=true,
+    this.textAlign=TextAlign.left,this.fontSize=15,this.fontSizeDecoration=18,
+  }) : super(key: key);
+  final TextEditingController controller;
+  final String labelText;
+  final Function onChanged;
+  final bool isPassword;
+  final bool isEnabled;
+  final TextAlign textAlign;
+  final double fontSize;
+  final double fontSizeDecoration;
+  @override
+  _TextFFBasicoNumerosState createState() => _TextFFBasicoNumerosState();
+}
+
+class _TextFFBasicoNumerosState extends State<TextFFBasicoNumeros> {
+  final color=Colors.black;
+  final colorFill=Colors.white12;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      textAlign: widget.textAlign,
+      controller: widget.controller,
+      style: TextStyle(color: color.withOpacity(0.8),
+        fontSize: widget.fontSize
+      ),
+      autofocus: true,
+      scrollPadding: EdgeInsets.zero,
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      obscureText: widget.isPassword,
+      enabled: widget.isEnabled,
+      //enableSuggestions: false,
+      maxLines: 1,
+      
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 0),
+        //counterText: controllerCII!.text.length.toString(),
+        //hintText: "Capacidad de inversión inicial",
+        hintStyle: TextStyle(color: color.withOpacity(0.8),fontSize: 15),
+        filled: true,
+        fillColor: colorFill,
+        labelText: widget.labelText,
+        labelStyle: TextStyle(
+          fontSize: widget.fontSizeDecoration
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),

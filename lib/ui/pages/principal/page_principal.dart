@@ -65,8 +65,9 @@ class _PagePrincipalState extends State<PagePrincipal> {
   }
   @override
   Widget build(BuildContext context) {
+    final usuarioProvider=Provider.of<UsuarioProvider>(context);
     return DefaultTabController(
-      length: 2,
+      length: usuarioProvider.usuario.tipoUsuario=="Administrador"?1:2,
       child: Scaffold(
         appBar: AppBar(
           title: Text("Rocas"),
@@ -82,6 +83,7 @@ class _PagePrincipalState extends State<PagePrincipal> {
                 child: Text("Comprar"),
                 icon: Icon(Icons.shopping_cart_rounded,size:30),
               ),
+              if(usuarioProvider.usuario.tipoUsuario=="Vendedor")
               Tab(
                 child: Text("Vender"),
                 icon: Icon(Icons.shopping_cart_outlined,size: 30,),

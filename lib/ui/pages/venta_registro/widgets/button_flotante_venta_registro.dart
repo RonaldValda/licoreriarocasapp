@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:licoreriarocasapp/domain/entities/compra.dart';
 import 'package:licoreriarocasapp/domain/usecases/compra/usecase_compra.dart';
-import 'package:licoreriarocasapp/ui/provider/Compra/compraProvider.dart';
 import 'package:licoreriarocasapp/ui/provider/autenticacion/usuarioProvider.dart';
+import 'package:licoreriarocasapp/ui/provider/venta/ventaProvider.dart';
 import 'package:provider/provider.dart';
-class ButtonFlotanteCompraRegitro extends StatefulWidget {
-  ButtonFlotanteCompraRegitro({Key? key}) : super(key: key);
+class ButtonFlotanteVentaRegitro extends StatefulWidget {
+  ButtonFlotanteVentaRegitro({Key? key}) : super(key: key);
 
   @override
-  _ButtonFlotanteCompraRegitroState createState() => _ButtonFlotanteCompraRegitroState();
+  _ButtonFlotanteVentaRegitroState createState() => _ButtonFlotanteVentaRegitroState();
 }
 
-class _ButtonFlotanteCompraRegitroState extends State<ButtonFlotanteCompraRegitro> {
+class _ButtonFlotanteVentaRegitroState extends State<ButtonFlotanteVentaRegitro> {
   double width=0.0;
   double height=0.0;
-  UseCaseCompra useCaseCompra=UseCaseCompra();
   @override
   Widget build(BuildContext context) {
-    final compraProvider=Provider.of<CompraProvider>(context);
+    final ventaProvider=Provider.of<VentaProvider>(context);
     final usuarioProvider=Provider.of<UsuarioProvider>(context);
     width=MediaQuery.of(context).size.width-10;
     height=50;
@@ -33,7 +32,7 @@ class _ButtonFlotanteCompraRegitroState extends State<ButtonFlotanteCompraRegitr
           //color: Colors.indigo
         ),
         child: Card(
-          color: Colors.indigo,
+          color: Colors.greenAccent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(15))
           ),
@@ -42,14 +41,13 @@ class _ButtonFlotanteCompraRegitroState extends State<ButtonFlotanteCompraRegitr
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-                
                 children: [
                   Container(
                     child: Center(
-                      child: Text("   Total: ${compraProvider.compraCarrito.costoTotal.toString()}",
+                      child: Text("   Total: ${ventaProvider.ventaCarrito.precioTotal.toString()}",
                         style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.amberAccent
+                          color: Colors.black54,
+                          fontSize: 16
                         ),
                       ),
                     ),
@@ -73,31 +71,15 @@ class _ButtonFlotanteCompraRegitroState extends State<ButtonFlotanteCompraRegitr
                       bottomRight: Radius.circular(15)
                     )
                   ),
-                  child: Text("Registrar",
+                  child: Text("Vender",
                     style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.amberAccent
+                      color: Colors.black54,
+                      fontSize: 16
                     ),
                   ),
                   onPressed: (){
-                    compraProvider.compraCarrito.sucursal=usuarioProvider.sucursal;
-                    compraProvider.compraCarrito.usuarioPreCompra=usuarioProvider.usuario;
-                    compraProvider.compraCarrito.tipoUsuarioConfirmacion=usuarioProvider.usuario.tipoUsuario=="Administrador"?"Vendedor":"Administrador";
-                    useCaseCompra.registrarPreCompra(compraProvider.compraCarrito)
-                    .then((resultado){
-                      if(resultado["completado"]){
-                        compraProvider.compraCarrito=resultado["compra"];
-                        compraProvider.compraCarrito.compraProductos.forEach((element) { 
-                          element.seleccionado=false;
-                          element.cantidad=0;
-                          element.precioUnitario=0;
-                          element.lote="";
-                          element.fechaVencimiento="";
-                        });
-                        compraProvider.setCompraCarrito(Compra.vacio());
-                        Navigator.pop(context);
-                      }
-                    });
+                    ventaProvider.ventaCarrito.sucursal=usuarioProvider.sucursal;
+                    ventaProvider.ventaCarrito.vendedor=usuarioProvider.usuario;
                   }
                 )
               ),

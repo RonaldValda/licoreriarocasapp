@@ -15,20 +15,25 @@ class Producto{
   double gradoAlcoholico;
   List<dynamic> imagenesProducto;
   List<ProductoLote> productoLotes;
-
+  int cantidadFavoritos;
+  List<ClienteFavorito> clientesFavorito;
+  String fechaRegistro;
   Etiqueta etiqueta;
   Producto({
     required this.id,required this.codigo,required this.unidad,
     required this.contenido,required this.precio,required this.stockMinimo,
     required this.utilidad,required this.vencimientoMaximo,
     required this.gradoAlcoholico,required this.imagenesProducto,
-    required this.etiqueta,required this.productoLotes
+    required this.etiqueta,required this.productoLotes,
+    required this.cantidadFavoritos,required this.clientesFavorito,
+    required this.fechaRegistro
   });
   factory Producto.vacio(){
     return Producto(
       id: "", codigo:"", unidad: "", contenido: "", precio: 0.0, 
       stockMinimo: 0, utilidad: 0.0, vencimientoMaximo: 0, gradoAlcoholico: 0.0,
-      imagenesProducto: [],etiqueta: Etiqueta.vacio(),productoLotes: []
+      imagenesProducto: [],etiqueta: Etiqueta.vacio(),productoLotes: [],
+      cantidadFavoritos: 0,clientesFavorito: [],fechaRegistro: ""
     );
   }
   factory Producto.fromMap(Map<String,dynamic> data){
@@ -36,6 +41,11 @@ class Producto{
     List<ProductoLote> psLote=[];
     productoLotesD.forEach((data) { 
       psLote.add(ProductoLote.fromMap(data));
+    });
+    List clientesFavoritosD=data["clientes_favoritos"]??[];
+    List<ClienteFavorito> cfs=[];
+    clientesFavoritosD.forEach((data) { 
+      cfs.add(ClienteFavorito.fromMap(data));
     });
     return Producto(
       id: data["id"]??"",codigo: data["codigo"]??"", 
@@ -45,7 +55,7 @@ class Producto{
       vencimientoMaximo: data["vencimiento_maximo"]??0, 
       gradoAlcoholico: data["grado_alcoholico"]!=null?double.parse(data["grado_alcoholico"].toString()):0.0,
       imagenesProducto: data["imagenes_producto"]??[],etiqueta: data["etiqueta"]!=null?Etiqueta.fromMap(data["etiqueta"]):Etiqueta.vacio(),
-      productoLotes: psLote
+      productoLotes: psLote,cantidadFavoritos: data["cantidad_favoritos"]??0,clientesFavorito: cfs,fechaRegistro: data["fecha_registro"]??""
     );
   }
   factory Producto.copyWith(Producto p){
@@ -53,12 +63,17 @@ class Producto{
     p.productoLotes.forEach((pl) { 
       psLote.add(ProductoLote.copyWith(pl));
     });
+    List<ClienteFavorito> cfs=[];
+    p.clientesFavorito.forEach((cf) { 
+      cfs.add(ClienteFavorito.copyWith(cf));
+    });
     return Producto(
       id: p.id,codigo: p.codigo, etiqueta: Etiqueta.copyWith(p.etiqueta), unidad: p.unidad, 
       contenido: p.contenido, precio: p.precio, stockMinimo: p.stockMinimo, 
       utilidad: p.utilidad, vencimientoMaximo: p.vencimientoMaximo, 
       gradoAlcoholico: p.gradoAlcoholico, imagenesProducto: p.imagenesProducto,
-      productoLotes: psLote
+      productoLotes: psLote,cantidadFavoritos: p.cantidadFavoritos,clientesFavorito: cfs,
+      fechaRegistro: p.fechaRegistro
     );
   }
   Map<String,dynamic> toMap(){

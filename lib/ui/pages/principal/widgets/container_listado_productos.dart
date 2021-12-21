@@ -28,27 +28,6 @@ class _ContainerListadoProductosCompraState extends State<ContainerListadoProduc
   @override
   void initState() {
     super.initState();
-    /*WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      cmpProvider=Provider.of<CompraProvider>(context,listen: false);
-      usProvider=Provider.of<UsuarioProvider>(context,listen: false);
-      cmpProvider.compraCarrito.usuarioPreCompra=usProvider.usuario;
-      cmpProvider.setCompra(Compra.vacio());
-      useCaseProducto.obtenerProductosGeneral()
-      .then((resultado){
-        if(resultado["completado"]){
-          productos=resultado["productos"];
-          productos.forEach((producto) {
-            CompraProducto cp=CompraProducto.vacio();
-            cp.producto=producto;
-            cmpProvider.compra.compraProductos.add(cp);
-          });
-          
-          setState(() {
-            
-          });
-        }
-      });
-    });*/
     
   }
   @override
@@ -67,7 +46,7 @@ class _ContainerListadoProductosCompraState extends State<ContainerListadoProduc
              GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: MediaQuery.of(context).size.width/(MediaQuery.of(context).size.width*1.5),
+                childAspectRatio: MediaQuery.of(context).size.width/(MediaQuery.of(context).size.width*1.4),
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 10
               ),
@@ -138,6 +117,11 @@ class _ContainerListadoProductosCompraState extends State<ContainerListadoProduc
   Widget  _itemCompraProducto(CompraProvider compraProvider,int index){
     var compraProducto=compraProvider.compra.compraProductos[index];
     TextEditingController controllerCantidad=TextEditingController(text: compraProducto.cantidad.toString());
+    controllerCantidad.value=controllerCantidad.value.copyWith(
+      text: compraProducto.cantidad.toString(),
+      selection: TextSelection.fromPosition(
+        TextPosition(offset: compraProducto.cantidad.toString().length)),
+    );
     return Card(
       elevation: 5,
       borderOnForeground: true,
@@ -152,7 +136,6 @@ class _ContainerListadoProductosCompraState extends State<ContainerListadoProduc
                 AspectRatio(
                   aspectRatio: 2/1.8,
                   child: CachedNetworkImage(
-                    
                     imageUrl: compraProducto.producto.imagenesProducto[0]
                   ),
                 ),
@@ -177,26 +160,20 @@ class _ContainerListadoProductosCompraState extends State<ContainerListadoProduc
                             ),
                           ),
                           onPressed: (){
-                            if(compraProducto.cantidad>0){
-                              controllerCantidad.text=(int.parse(controllerCantidad.text)-1).toString();
-                              compraProducto.cantidad=int.parse(controllerCantidad.text);
-                            }
+                            compraProvider.decrementarCantidadCompraProductoCarrito(compraProducto);
                           }
                         ),
                       ),
                       Expanded(
                         child: Container(
                           height: 30,
-                          child: TextFFBasico(
+                          child: TextFFBasicoNumeros(
                             controller: controllerCantidad, 
                             labelText: "", 
+                            fontSize: 20,
                             textAlign: TextAlign.center,
                             onChanged: (x){
-                              if(int.parse(x)>=0){
-                                compraProducto.cantidad=int.parse(x);
-                              }else{
-                                controllerCantidad.text="0";
-                              }
+                              compraProvider.setCantidadCompraProductoCarrito(compraProducto, int.parse(x!=""?x:"0"));
                             }
                           ),
                         )
@@ -218,8 +195,7 @@ class _ContainerListadoProductosCompraState extends State<ContainerListadoProduc
                             ),
                           ),
                           onPressed: (){
-                            controllerCantidad.text=(int.parse(controllerCantidad.text)+1).toString();
-                            compraProducto.cantidad=int.parse(controllerCantidad.text);
+                            compraProvider.incrementarCantidadCompraProductoCarrito(compraProducto);
                           }
                         ),
                       ),
@@ -228,35 +204,6 @@ class _ContainerListadoProductosCompraState extends State<ContainerListadoProduc
                 ),
               ],
             ),
-            Container(
-              width: MediaQuery.of(context).size.width/2,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.blueGrey.shade100,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(5),
-                  bottomRight: Radius.circular(5)
-                )
-              ),
-              child: MaterialButton(
-                onPressed: (){
-                  print(compraProducto.producto.precio);
-                  if(compraProducto.seleccionado){
-                    compraProducto.seleccionado=!compraProducto.seleccionado;
-                    compraProvider.removeCompraProductoCarrito(compraProducto);
-                  }else{
-                    compraProducto.seleccionado=!compraProducto.seleccionado;
-                    compraProvider.addCompraProductoCarrito(compraProducto);
-                  }
-                },
-                child: //Icon(Icons.add_shopping_cart,color: Colors.amberAccent,)
-                Text(!compraProducto.seleccionado?"Añadir a carrito":"Quitar de carrito",
-                  style: TextStyle(
-                    color: !compraProducto.seleccionado?Colors.indigo:Colors.red
-                  ),
-                )
-              ),
-            )
           ],
         ),
       ),

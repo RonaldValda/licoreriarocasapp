@@ -28,7 +28,7 @@ class _ContainerListadoProductosVentaState extends State<ContainerListadoProduct
           GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: MediaQuery.of(context).size.width/(MediaQuery.of(context).size.width*1.5),
+              childAspectRatio: MediaQuery.of(context).size.width/(MediaQuery.of(context).size.width*1.4),
               crossAxisSpacing: 5,
               mainAxisSpacing: 10
             ),
@@ -75,7 +75,6 @@ class _ContainerListadoProductosVentaState extends State<ContainerListadoProduct
                 style: TextStyle(
                   color: Colors.black54,
                   fontSize: 16
-
                 ),
               ),
               Container(
@@ -106,6 +105,11 @@ class _ContainerListadoProductosVentaState extends State<ContainerListadoProduct
   Widget  _itemVentaProducto(VentaProvider ventaProvider,int index){
     var ventaProducto=ventaProvider.venta.ventaProductos[index];
     TextEditingController controllerCantidad=TextEditingController(text: ventaProducto.cantidad.toString());
+    controllerCantidad.value=controllerCantidad.value.copyWith(
+      text: ventaProducto.cantidad.toString(),
+      selection: TextSelection.fromPosition(
+        TextPosition(offset: ventaProducto.cantidad.toString().length)),
+    );
     return Card(
       elevation: 5,
       borderOnForeground: true,
@@ -144,26 +148,20 @@ class _ContainerListadoProductosVentaState extends State<ContainerListadoProduct
                             ),
                           ),
                           onPressed: (){
-                            if(ventaProducto.cantidad>0){
-                              controllerCantidad.text=(int.parse(controllerCantidad.text)-1).toString();
-                              ventaProducto.cantidad=int.parse(controllerCantidad.text);
-                            }
+                            ventaProvider.decrementarCantidadVentaProductoCarrito(ventaProducto);
                           }
                         ),
                       ),
                       Expanded(
                         child: Container(
                           height: 30,
-                          child: TextFFBasico(
+                          child: TextFFBasicoNumeros(
                             controller: controllerCantidad, 
                             labelText: "", 
+                            fontSize: 18,
                             textAlign: TextAlign.center,
                             onChanged: (x){
-                              if(int.parse(x)>=0){
-                                ventaProducto.cantidad=int.parse(x);
-                              }else{
-                                controllerCantidad.text="0";
-                              }
+                              ventaProvider.setCantidadVentaProductoCarrito(ventaProducto, x!=""?int.parse(x):0);
                             }
                           ),
                         )
@@ -184,8 +182,7 @@ class _ContainerListadoProductosVentaState extends State<ContainerListadoProduct
                             ),
                           ),
                           onPressed: (){
-                            controllerCantidad.text=(int.parse(controllerCantidad.text)+1).toString();
-                            ventaProducto.cantidad=int.parse(controllerCantidad.text);
+                            ventaProvider.incrementarCantidadVentaProductoCarrito(ventaProducto);
                           }
                         ),
                       ),
@@ -194,34 +191,6 @@ class _ContainerListadoProductosVentaState extends State<ContainerListadoProduct
                 ),
               ],
             ),
-            Container(
-              width: MediaQuery.of(context).size.width/2,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.lightGreen.shade100,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(5),
-                  bottomRight: Radius.circular(5)
-                )
-              ),
-              child: MaterialButton(
-                onPressed: (){
-                  if(ventaProducto.seleccionado){
-                    ventaProducto.seleccionado=!ventaProducto.seleccionado;
-                    ventaProvider.removeVentaProductoCarrito(ventaProducto);
-                  }else{
-                    ventaProducto.seleccionado=!ventaProducto.seleccionado;
-                    ventaProvider.addVentaProductoCarrito(ventaProducto);
-                  }
-                },
-                child: //Icon(Icons.add_shopping_cart,color: Colors.amberAccent,)
-                Text(!ventaProducto.seleccionado?"Añadir a carrito":"Quitar de carrito",
-                  style: TextStyle(
-                    color: !ventaProducto.seleccionado?Colors.indigo:Colors.red
-                  ),
-                )
-              ),
-            )
           ],
         ),
       ),
