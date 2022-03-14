@@ -36,11 +36,7 @@ dependencies:
   firebase_core:
   cached_network_image: ^3.1.0
   horizontal_data_table: ^3.5.0
-<<<<<<< HEAD
-  
-=======
   fluttericon: ^2.0.0
->>>>>>> 6de4a668fa3e5b5847e3b900f323b52ff21491b8
 dev_dependencies:
   flutter_test:
     sdk: flutter
